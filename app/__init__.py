@@ -58,7 +58,7 @@ def _seed_configuracoes():
 def _start_scheduler(app):
     if scheduler.running:
         return
-    from app.scheduler import check_birthdays, check_appointments_24h
+    from app.tasks import check_birthdays, check_appointments_24h
     scheduler.add_job(
         func=check_birthdays,
         args=[app],
