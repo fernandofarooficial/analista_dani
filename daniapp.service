@@ -1,0 +1,19 @@
+[Unit]
+Description=Gunicorn Flask App - DaniApp
+After=network.target postgresql@16-main.service
+
+[Service]
+User=workuser
+WorkingDirectory=/home/workuser/analista_dani
+Environment="PATH=/home/workuser/analista_dani/venv/bin"
+Environment="FLASK_ENV=production"
+Environment="SECRET_KEY=troque-por-chave-forte-aqui"
+Environment="DATABASE_URL=postgresql://fefa_dev:Fd7493dt@127.0.0.1:5432/daniapp"
+ExecStart=/home/workuser/analista_dani/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:5004 --timeout 120 run:app
+StandardOutput=journal
+StandardError=journal
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

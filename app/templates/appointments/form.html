@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% set is_new = agendamento is none %}
+{% block title %}{{ 'Nova Consulta' if is_new else 'Editar Consulta' }} – DaniApp{% endblock %}
+{% block page_title %}{{ 'Nova Consulta' if is_new else 'Editar Consulta' }}{% endblock %}
+
+{% block back_button %}
+<a href="{{ url_for('appointments.list') }}" class="btn btn-link text-white p-0 me-1">
+  <i class="bi bi-arrow-left fs-5"></i>
+</a>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="p-3">
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-person-check"></i> Paciente</div>
+    <div class="mb-3">
+      <label class="form-label">Paciente *</label>
+      <select name="paciente_id" class="form-select" required>
+        <option value="">Selecione...</option>
+        {% for p in pacientes %}
+        <option value="{{ p.id }}"
+          {% if (agendamento and agendamento.paciente_id == p.id) or (paciente_pre and paciente_pre.id == p.id) %}selected{% endif %}>
+          {{ p.nome_completo }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-calendar-event"></i> Data e Hora</div>
+    <div class="mb-3">
+      <label class="form-label">Data e Hora *</label>
+      <input type="datetime-local" name="data_hora" class="form-control" required
+             value="{{ agendamento.data_hora.strftime('%Y-%m-%dT%H:%M') if agendamento and agendamento.data_hora else '' }}">
+    </div>
+  </div>
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-cash-coin"></i> Valores</div>
+    <div class="row g-2 mb-3">
+      <div class="col-6">
+        <label class="form-label">Valor Consulta (R$)</label>
+        <input type="number" name="valor_consulta" class="form-control" step="0.01" min="0"
+               value="{{ agendamento.valor_consulta if agendamento else valor_consulta_padrao }}">
+      </div>
+      <div class="col-6">
+        <label class="form-label">Valor Custo (R$)</label>
+        <input type="number" name="valor_custo" class="form-control" step="0.01" min="0"
+               value="{{ agendamento.valor_custo if agendamento else valor_custo_padrao }}">
+      </div>
+    </div>
+    <p class="text-muted small px-0 mb-0">
+      O custo é um valor adicional referente àquela sessão específica.
+    </p>
+  </div>
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-card-text"></i> Observações</div>
+    <div class="mb-3">
+      <textarea name="observacoes" class="form-control" rows="3"
+                placeholder="Observações sobre a consulta...">{{ agendamento.observacoes or '' if agendamento else '' }}</textarea>
+    </div>
+    {% if not is_new %}
+    <div class="form-check form-switch p-3 ps-5">
+      <input class="form-check-input" type="checkbox" name="confirmado" id="confirmado"
+             {% if agendamento and agendamento.confirmado %}checked{% endif %}>
+      <label class="form-check-label" for="confirmado">
+        Consulta realizada (confirmar)
+      </label>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="d-grid mb-4">
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="bi bi-check-lg"></i> {{ 'Agendar' if is_new else 'Salvar' }}
+    </button>
+  </div>
+
+</form>
+
+{% if not is_new %}
+<div class="px-3 mb-4">
+  <form method="post" action="{{ url_for('appointments.delete', id=agendamento.id) }}"
+        onsubmit="return confirm('Excluir este agendamento?')">
+    <button type="submit" class="btn btn-outline-danger w-100">
+      <i class="bi bi-trash"></i> Excluir Agendamento
+    </button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Contábil – DaniApp{% endblock %}
+{% block page_title %}Contábil{% endblock %}
+
+{% block content %}
+<div class="p-3">
+
+  <!-- Seletor de modo -->
+  <div class="btn-group w-100 mb-3" role="group">
+    <a href="{{ url_for('accounting.report', modo='mes', mes=mes_selecionado, ano=ano_selecionado) }}"
+       class="btn btn-sm {{ 'btn-primary' if modo == 'mes' else 'btn-outline-primary' }}">
+      Por Mês
+    </a>
+    <a href="{{ url_for('accounting.report', modo='periodo') }}"
+       class="btn btn-sm {{ 'btn-primary' if modo == 'periodo' else 'btn-outline-primary' }}">
+      Por Período
+    </a>
+  </div>
+
+  <!-- Filtro por mês -->
+  {% if modo == 'mes' %}
+  <form method="get" class="section-card mb-3">
+    <input type="hidden" name="modo" value="mes">
+    <div class="row g-2 p-3">
+      <div class="col-6">
+        <label class="form-label">Mês</label>
+        <select name="mes" class="form-select">
+          {% for m in range(1, 13) %}
+          <option value="{{ m }}" {% if m == mes_selecionado %}selected{% endif %}>
+            {{ ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][m-1] }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Ano</label>
+        <select name="ano" class="form-select">
+          {% for ano in range(hoje.year, hoje.year - 3, -1) %}
+          <option value="{{ ano }}" {% if ano == ano_selecionado %}selected{% endif %}>{{ ano }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="px-3 pb-3">
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="bi bi-search"></i> Filtrar
+      </button>
+    </div>
+  </form>
+  {% endif %}
+
+  <!-- Filtro por período -->
+  {% if modo == 'periodo' %}
+  <form method="get" class="section-card mb-3">
+    <input type="hidden" name="modo" value="periodo">
+    <div class="p-3">
+      <div class="mb-3">
+        <label class="form-label">Data inicial</label>
+        <input type="date" name="inicio" class="form-control"
+               value="{{ inicio.strftime('%Y-%m-%d') }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Data final</label>
+        <input type="date" name="fim" class="form-control"
+               value="{{ fim.strftime('%Y-%m-%d') }}">
+      </div>
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="bi bi-search"></i> Filtrar
+      </button>
+    </div>
+  </form>
+  {% endif %}
+
+  <!-- Totais -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-calculator"></i> Resumo</div>
+    <div class="p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>Total Consultas</span>
+        <span class="fw-bold text-primary">R$ {{ '%.2f'|format(total_consulta)|replace('.', ',') }}</span>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>Total Custos</span>
+        <span class="fw-bold text-danger">R$ {{ '%.2f'|format(total_custo)|replace('.', ',') }}</span>
+      </div>
+      <hr class="my-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Total Geral</span>
+        <span class="fw-bold fs-5 text-success">R$ {{ '%.2f'|format(total_geral)|replace('.', ',') }}</span>
+      </div>
+      <div class="text-muted small mt-2">
+        {{ agendamentos|length }} sessão(ões) confirmada(s) no período
+      </div>
+    </div>
+  </div>
+
+  <!-- Listagem -->
+  {% if agendamentos %}
+  <h6 class="fw-bold mb-2">Sessões do Período</h6>
+  {% for ag in agendamentos %}
+  <div class="card border-0 shadow-sm mb-2">
+    <div class="card-body py-2 px-3">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="fw-semibold small">{{ ag.paciente.nome_exibicao }}</div>
+          <div class="text-muted small">
+            {{ ag.data_hora.strftime('%d/%m/%Y %H:%M') }}
+          </div>
+        </div>
+        <div class="text-end">
+          <div class="text-primary small fw-semibold">
+            R$ {{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}
+          </div>
+          {% if ag.valor_custo %}
+          <div class="text-danger small">
+            + R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="text-center text-muted py-4">
+    <i class="bi bi-graph-down fs-1"></i>
+    <p class="mt-2">Nenhuma sessão confirmada no período</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

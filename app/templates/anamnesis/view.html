@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Anamnese #{{ anamnese.id }} – {{ paciente.nome_exibicao }}{% endblock %}
+{% block page_title %}Anamnese – {{ paciente.nome_exibicao }}{% endblock %}
+
+{% block back_button %}
+<a href="{{ url_for('patients.detail', id=paciente.id) }}" class="btn btn-link text-white p-0 me-1">
+  <i class="bi bi-arrow-left fs-5"></i>
+</a>
+{% endblock %}
+
+{% block header_actions %}
+<a href="{{ url_for('anamnesis.edit', id=anamnese.id) }}" class="btn btn-light btn-sm">
+  <i class="bi bi-pencil"></i>
+</a>
+{% endblock %}
+
+{% macro show(label, value) %}
+{% if value %}
+<div class="info-row">
+  <span class="info-label">{{ label }}</span>
+  <span class="info-value" style="white-space: pre-wrap">{{ value }}</span>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% block content %}
+<div class="p-3">
+  <p class="text-muted small mb-3">
+    Criada em {{ anamnese.created_at.strftime('%d/%m/%Y %H:%M') }}
+    {% if anamnese.updated_at != anamnese.created_at %}
+      · Atualizada em {{ anamnese.updated_at.strftime('%d/%m/%Y %H:%M') }}
+    {% endif %}
+  </p>
+
+  <!-- Seção 1 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-person-lines-fill"></i> 1. Dados Cadastrais</div>
+    <div class="info-row"><span class="info-label">Nome</span><span class="info-value">{{ paciente.nome_completo }}</span></div>
+    {% if paciente.email %}<div class="info-row"><span class="info-label">E-mail</span><span class="info-value">{{ paciente.email }}</span></div>{% endif %}
+    {% if paciente.telefone %}<div class="info-row"><span class="info-label">Telefone</span><span class="info-value">{{ paciente.telefone }}</span></div>{% endif %}
+    {% if paciente.data_nascimento %}<div class="info-row"><span class="info-label">Nascimento</span><span class="info-value">{{ paciente.data_nascimento.strftime('%d/%m/%Y') }}</span></div>{% endif %}
+    {% if paciente.cidade %}<div class="info-row"><span class="info-label">Cidade</span><span class="info-value">{{ paciente.cidade }}</span></div>{% endif %}
+    {% if paciente.naturalidade %}<div class="info-row"><span class="info-label">Naturalidade</span><span class="info-value">{{ paciente.naturalidade }}</span></div>{% endif %}
+    {% if paciente.endereco %}<div class="info-row"><span class="info-label">Endereço</span><span class="info-value">{{ paciente.endereco }}, {{ paciente.numero }} - {{ paciente.bairro }}</span></div>{% endif %}
+    {% if paciente.profissao %}<div class="info-row"><span class="info-label">Profissão</span><span class="info-value">{{ paciente.profissao }}</span></div>{% endif %}
+    {% if paciente.escolaridade %}<div class="info-row"><span class="info-label">Escolaridade</span><span class="info-value">{{ paciente.escolaridade }}</span></div>{% endif %}
+    {{ show('Indicação', anamnese.indicacao) }}
+    {{ show('Fuma', anamnese.fuma) }}
+    {{ show('Bebe', anamnese.bebe) }}
+    {{ show('Drogas', anamnese.drogas) }}
+    {{ show('Vícios/compulsões', anamnese.vicios_compulsoes) }}
+    {{ show('Terapia anterior', anamnese.fez_terapia_anterior) }}
+  </div>
+
+  <!-- Seção 2 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-people"></i> 2. Configuração Familiar</div>
+    {{ show('Cônjuge', anamnese.conjuge) }}
+    {{ show('Mãe', anamnese.mae) }}
+    {{ show('Pai', anamnese.pai) }}
+    {{ show('Irmãos', anamnese.irmaos) }}
+    {{ show('Ordem de filho', anamnese.ordem_filho) }}
+    {{ show('Filhos', anamnese.filhos) }}
+  </div>
+
+  <!-- Seção 3 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-lock"></i> 3. Dados Sigilosos</div>
+    {{ show('Queixa Principal', anamnese.queixa_principal) }}
+    {{ show('Histórico da Queixa', anamnese.historico_queixa_atual) }}
+    {{ show('Infância', anamnese.hist_infancia) }}
+    {{ show('Adolescência', anamnese.hist_adolescencia) }}
+    {{ show('Vida Adulta', anamnese.hist_vida_adulta) }}
+    {{ show('Dinâmica Familiar', anamnese.hist_dinamica_familiar) }}
+    {{ show('Medicações', anamnese.saude_medicacoes) }}
+    {{ show('Tratamentos anteriores', anamnese.saude_tratamentos_anteriores) }}
+    {{ show('Sono/alimentação/substâncias', anamnese.saude_sono_alimentacao) }}
+  </div>
+
+  <!-- Seção 4 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-clipboard2-pulse"></i> 4. Impressões do Analista</div>
+    {{ show('Aparência e Atitude', anamnese.aparencia_atitude) }}
+    {{ show('Hipótese Diagnóstica', anamnese.hipotese_diagnostica) }}
+    {{ show('Contratransferência', anamnese.contratransferencia) }}
+    {{ show('Prognóstico e Plano', anamnese.prognostico_plano) }}
+  </div>
+</div>
+{% endblock %}

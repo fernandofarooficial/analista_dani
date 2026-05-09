@@ -1,0 +1,93 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from app.extensions import db
+from app.models import Paciente
+
+patients_bp = Blueprint('patients', __name__, url_prefix='/m/pacientes')
+
+
+@patients_bp.route('/')
+def list():
+    q = request.args.get('q', '').strip()
+    query = Paciente.query.filter_by(ativo=True)
+    if q:
+        query = query.filter(
+            db.or_(
+                Paciente.nome_completo.ilike(f'%{q}%'),
+                Paciente.nome.ilike(f'%{q}%'),
+                Paciente.cpf.ilike(f'%{q}%'),
+                Paciente.telefone.ilike(f'%{q}%'),
+            )
+        )
+    pacientes = query.order_by(Paciente.nome_completo).all()
+    return render_template('patients/list.html', pacientes=pacientes, q=q)
+
+
+@patients_bp.route('/novo', methods=['GET', 'POST'])
+def new():
+    if request.method == 'POST':
+        p = _paciente_from_form(Paciente())
+        db.session.add(p)
+        db.session.commit()
+        flash('Paciente cadastrado com sucesso!', 'success')
+        return redirect(url_for('patients.detail', id=p.id))
+    return render_template('patients/form.html', paciente=None)
+
+
+@patients_bp.route('/<int:id>')
+def detail(id):
+    p = Paciente.query.get_or_404(id)
+    return render_template('patients/detail.html', paciente=p)
+
+
+@patients_bp.route('/<int:id>/editar', methods=['GET', 'POST'])
+def edit(id):
+    p = Paciente.query.get_or_404(id)
+    if request.method == 'POST':
+        _paciente_from_form(p)
+        db.session.commit()
+        flash('Paciente atualizado com sucesso!', 'success')
+        return redirect(url_for('patients.detail', id=p.id))
+    return render_template('patients/form.html', paciente=p)
+
+
+@patients_bp.route('/<int:id>/excluir', methods=['POST'])
+def delete(id):
+    p = Paciente.query.get_or_404(id)
+    p.ativo = False
+    db.session.commit()
+    flash('Paciente inativado.', 'info')
+    return redirect(url_for('patients.list'))
+
+
+def _paciente_from_form(p: Paciente) -> Paciente:
+    from datetime import date
+    p.nome_completo = request.form.get('nome_completo', '').strip()
+    p.nome = request.form.get('nome', '').strip() or None
+    p.cpf = request.form.get('cpf', '').strip() or None
+    p.rg = request.form.get('rg', '').strip() or None
+    p.email = request.form.get('email', '').strip() or None
+    p.telefone = request.form.get('telefone', '').strip() or None
+    p.endereco = request.form.get('endereco', '').strip() or None
+    p.numero = request.form.get('numero', '').strip() or None
+    p.complemento = request.form.get('complemento', '').strip() or None
+    p.bairro = request.form.get('bairro', '').strip() or None
+    p.cidade = request.form.get('cidade', '').strip() or None
+    p.estado = request.form.get('estado', '').strip() or None
+    p.cep = request.form.get('cep', '').strip() or None
+    p.escolaridade = request.form.get('escolaridade', '').strip() or None
+    p.genero = request.form.get('genero', '').strip() or None
+    p.estado_civil = request.form.get('estado_civil', '').strip() or None
+    p.profissao = request.form.get('profissao', '').strip() or None
+    p.naturalidade = request.form.get('naturalidade', '').strip() or None
+    p.envia_parabens = request.form.get('envia_parabens') == 'on'
+
+    dn = request.form.get('data_nascimento', '').strip()
+    if dn:
+        try:
+            p.data_nascimento = date.fromisoformat(dn)
+        except ValueError:
+            pass
+    else:
+        p.data_nascimento = None
+
+    return p

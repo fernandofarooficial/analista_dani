@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% set is_new = anamnese is none %}
+{% block title %}{{ 'Nova Anamnese' if is_new else 'Editar Anamnese' }} – {{ paciente.nome_exibicao }}{% endblock %}
+{% block page_title %}Anamnese – {{ paciente.nome_exibicao }}{% endblock %}
+
+{% block back_button %}
+<a href="{{ url_for('patients.detail', id=paciente.id) }}" class="btn btn-link text-white p-0 me-1">
+  <i class="bi bi-arrow-left fs-5"></i>
+</a>
+{% endblock %}
+
+{% macro field_text(label, name, value, placeholder='') %}
+<div class="mb-3">
+  <label class="form-label">{{ label }}</label>
+  <input type="text" name="{{ name }}" class="form-control"
+         value="{{ value or '' }}" placeholder="{{ placeholder }}">
+</div>
+{% endmacro %}
+
+{% macro field_textarea(label, name, value, rows=3) %}
+<div class="mb-3">
+  <label class="form-label">{{ label }}</label>
+  <textarea name="{{ name }}" class="form-control" rows="{{ rows }}">{{ value or '' }}</textarea>
+</div>
+{% endmacro %}
+
+{% block content %}
+<form method="post" class="p-3">
+
+  <!-- Seção 1 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-person-lines-fill"></i> 1. Dados Cadastrais Complementares</div>
+    <p class="text-muted small px-3">
+      Nome, contato e endereço já estão no cadastro do paciente.
+    </p>
+    {{ field_text('Indicação (quem indicou)', 'indicacao', anamnese.indicacao if anamnese else '') }}
+
+    <div class="mb-3">
+      <label class="form-label">Fuma?</label>
+      <select name="fuma" class="form-select">
+        <option value="">Selecione</option>
+        {% for op in ['Não', 'Sim', 'Ex-fumante'] %}
+        <option value="{{ op }}" {% if anamnese and anamnese.fuma == op %}selected{% endif %}>{{ op }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Bebe?</label>
+      <select name="bebe" class="form-select">
+        <option value="">Selecione</option>
+        {% for op in ['Não', 'Socialmente', 'Com frequência', 'Ex-usuário'] %}
+        <option value="{{ op }}" {% if anamnese and anamnese.bebe == op %}selected{% endif %}>{{ op }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Drogas?</label>
+      <select name="drogas" class="form-select">
+        <option value="">Selecione</option>
+        {% for op in ['Não', 'Sim', 'Ex-usuário'] %}
+        <option value="{{ op }}" {% if anamnese and anamnese.drogas == op %}selected{% endif %}>{{ op }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {{ field_textarea('Vícios e/ou compulsões', 'vicios_compulsoes', anamnese.vicios_compulsoes if anamnese else '') }}
+    {{ field_textarea('Já fez terapia anterior?', 'fez_terapia_anterior', anamnese.fez_terapia_anterior if anamnese else '') }}
+  </div>
+
+  <!-- Seção 2 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-people"></i> 2. Configuração Familiar</div>
+    {{ field_text('Estado civil', 'conjuge', anamnese.conjuge if anamnese else '', 'Nome e idade do cônjuge') }}
+    {{ field_text('Mãe', 'mae', anamnese.mae if anamnese else '', 'Nome, idade e situação') }}
+    {{ field_text('Pai', 'pai', anamnese.pai if anamnese else '', 'Nome, idade e situação') }}
+    {{ field_textarea('Irmãos', 'irmaos', anamnese.irmaos if anamnese else '', rows=2) }}
+    {{ field_text('Qual ordem de filho?', 'ordem_filho', anamnese.ordem_filho if anamnese else '', 'Ex: 1º filho, caçula...') }}
+    {{ field_textarea('Filhos (nome, idade, escolaridade, situação)', 'filhos', anamnese.filhos if anamnese else '', rows=3) }}
+  </div>
+
+  <!-- Seção 3 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-lock"></i> 3. Dados Sigilosos – Histórico</div>
+    {{ field_textarea('Queixa Principal (QP)', 'queixa_principal', anamnese.queixa_principal if anamnese else '', rows=4) }}
+    {{ field_textarea('Histórico da Queixa Atual', 'historico_queixa_atual', anamnese.historico_queixa_atual if anamnese else '', rows=4) }}
+    <hr class="my-2">
+    <p class="text-muted small px-0 mb-2"><strong>Histórico Pessoal</strong></p>
+    {{ field_textarea('Infância', 'hist_infancia', anamnese.hist_infancia if anamnese else '', rows=4) }}
+    {{ field_textarea('Adolescência', 'hist_adolescencia', anamnese.hist_adolescencia if anamnese else '', rows=4) }}
+    {{ field_textarea('Vida Adulta', 'hist_vida_adulta', anamnese.hist_vida_adulta if anamnese else '', rows=4) }}
+    {{ field_textarea('Dinâmica Familiar (doenças mentais, lutos, separações)', 'hist_dinamica_familiar', anamnese.hist_dinamica_familiar if anamnese else '', rows=4) }}
+    <hr class="my-2">
+    <p class="text-muted small px-0 mb-2"><strong>Saúde e Cuidados</strong></p>
+    {{ field_textarea('Medicações psiquiátricas (atuais/passadas)', 'saude_medicacoes', anamnese.saude_medicacoes if anamnese else '', rows=3) }}
+    {{ field_textarea('Tratamentos terapêuticos anteriores', 'saude_tratamentos_anteriores', anamnese.saude_tratamentos_anteriores if anamnese else '', rows=3) }}
+    {{ field_textarea('Qualidade do sono, alimentação e substâncias', 'saude_sono_alimentacao', anamnese.saude_sono_alimentacao if anamnese else '', rows=3) }}
+  </div>
+
+  <!-- Seção 4 -->
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-clipboard2-pulse"></i> 4. Impressões do Analista (Pós-Sessão)</div>
+    {{ field_textarea('Aparência e Atitude', 'aparencia_atitude', anamnese.aparencia_atitude if anamnese else '', rows=3) }}
+    {{ field_textarea('Hipótese Diagnóstica Inicial', 'hipotese_diagnostica', anamnese.hipotese_diagnostica if anamnese else '', rows=3) }}
+    {{ field_textarea('Contratransferência', 'contratransferencia', anamnese.contratransferencia if anamnese else '', rows=3) }}
+    {{ field_textarea('Prognóstico e Plano de Manejo', 'prognostico_plano', anamnese.prognostico_plano if anamnese else '', rows=3) }}
+  </div>
+
+  <div class="d-grid mb-4">
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="bi bi-check-lg"></i> {{ 'Criar Anamnese' if is_new else 'Salvar Alterações' }}
+    </button>
+  </div>
+</form>
+
+{% if not is_new %}
+<div class="px-3 mb-4">
+  <form method="post" action="{{ url_for('anamnesis.delete', id=anamnese.id) }}"
+        onsubmit="return confirm('Excluir esta anamnese?')">
+    <button type="submit" class="btn btn-outline-danger w-100">
+      <i class="bi bi-trash"></i> Excluir Anamnese
+    </button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

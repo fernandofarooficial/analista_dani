@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Início – DaniApp{% endblock %}
+{% block page_title %}DaniApp{% endblock %}
+
+{% block content %}
+<div class="p-3">
+
+  <!-- Aniversariantes -->
+  {% if aniversariantes %}
+  <div class="alert alert-warning d-flex align-items-center gap-2 py-2 mb-3">
+    <i class="bi bi-balloon-heart-fill fs-4"></i>
+    <div>
+      <strong>Aniversariante(s) hoje:</strong>
+      {% for p in aniversariantes %}
+        <a href="{{ url_for('patients.detail', id=p.id) }}" class="text-dark">{{ p.nome_exibicao }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Cards resumo do mês -->
+  <div class="row g-2 mb-3">
+    <div class="col-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-3">
+          <div class="text-muted small">Consultas ({{ mes_atual }})</div>
+          <div class="fw-bold fs-5 text-primary">R$ {{ '%.2f'|format(total_consulta)|replace('.', ',') }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-3">
+          <div class="text-muted small">Custos ({{ mes_atual }})</div>
+          <div class="fw-bold fs-5 text-danger">R$ {{ '%.2f'|format(total_custo)|replace('.', ',') }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-3">
+          <div class="text-muted small">Total ({{ mes_atual }})</div>
+          <div class="fw-bold fs-5 text-success">R$ {{ '%.2f'|format(total_geral)|replace('.', ',') }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-3">
+          <div class="text-muted small">Pacientes ativos</div>
+          <div class="fw-bold fs-5 text-secondary">{{ total_pacientes }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximas consultas -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h6 class="mb-0 fw-bold">Próximas Consultas</h6>
+    <a href="{{ url_for('appointments.new') }}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-lg"></i> Nova
+    </a>
+  </div>
+
+  {% if proximos %}
+    {% for ag in proximos %}
+    <div class="card border-0 shadow-sm mb-2">
+      <div class="card-body py-2 px-3">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="fw-semibold">{{ ag.paciente.nome_exibicao }}</div>
+            <div class="text-muted small">
+              <i class="bi bi-calendar3"></i>
+              {{ ag.data_hora.strftime('%d/%m/%Y') }}
+              <i class="bi bi-clock ms-1"></i>
+              {{ ag.data_hora.strftime('%H:%M') }}
+            </div>
+            <div class="small">
+              <span class="text-primary">R$ {{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}</span>
+              {% if ag.valor_custo %}
+                <span class="text-muted ms-1">+ custo R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="d-flex gap-1">
+            {% if ag.confirmado %}
+              <span class="badge bg-success"><i class="bi bi-check-circle"></i></span>
+            {% endif %}
+            <a href="{{ url_for('appointments.edit', id=ag.id) }}" class="btn btn-sm btn-outline-secondary py-0">
+              <i class="bi bi-pencil"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="text-center text-muted py-4">
+      <i class="bi bi-calendar-x fs-1"></i>
+      <p class="mt-2">Nenhuma consulta agendada</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

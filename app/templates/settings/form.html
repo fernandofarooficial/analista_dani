@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Configurações – DaniApp{% endblock %}
+{% block page_title %}Configurações{% endblock %}
+
+{% block content %}
+<form method="post" class="p-3">
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-cash-coin"></i> Valores Padrão</div>
+    <div class="p-3">
+      {% for chave, label, tipo in chaves[:2] %}
+      <div class="mb-3">
+        <label class="form-label">{{ label }}</label>
+        <input type="{{ tipo }}" name="{{ chave }}" class="form-control" step="0.01" min="0"
+               value="{{ configs.get(chave, '') }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-person-badge"></i> Dados da Psicanalista</div>
+    <div class="p-3">
+      {% for chave, label, tipo in chaves[2:4] %}
+      <div class="mb-3">
+        <label class="form-label">{{ label }}</label>
+        <input type="{{ tipo }}" name="{{ chave }}" class="form-control"
+               value="{{ configs.get(chave, '') }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-whatsapp"></i> WhatsApp – Evolution API</div>
+    <div class="p-3">
+      <div class="alert alert-info py-2 small mb-3">
+        <strong>Evolution API</strong> é uma solução gratuita e open-source para envio automático de WhatsApp.
+        <a href="https://github.com/EvolutionAPI/evolution-api" target="_blank">Ver instalação no VPS →</a>
+      </div>
+      {% for chave, label, tipo in chaves[4:7] %}
+      <div class="mb-3">
+        <label class="form-label">{{ label }}</label>
+        <input type="{{ tipo }}" name="{{ chave }}" class="form-control"
+               value="{{ configs.get(chave, '') }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="section-card mb-3">
+    <div class="section-title"><i class="bi bi-bell-fill"></i> Callmebot (alertas para você)</div>
+    <div class="p-3">
+      <div class="alert alert-info py-2 small mb-3">
+        <strong>Callmebot</strong> envia mensagens <em>para o seu próprio WhatsApp</em> (alertas internos).
+        Para ativar: salve o número <strong>+34 644 91 32 00</strong> e envie a mensagem
+        <code>I allow callmebot to send me messages</code>. Você receberá sua API Key.
+      </div>
+      {% for chave, label, tipo in chaves[7:] %}
+      <div class="mb-3">
+        <label class="form-label">{{ label }}</label>
+        <input type="{{ tipo }}" name="{{ chave }}" class="form-control"
+               value="{{ configs.get(chave, '') }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="d-grid mb-4">
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="bi bi-check-lg"></i> Salvar Configurações
+    </button>
+  </div>
+
+</form>
+{% endblock %}

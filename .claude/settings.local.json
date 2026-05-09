@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv\\\\Scripts\\\\python.exe generate_icons.py)",
+      "PowerShell(cd \"C:\\\\Users\\\\Fernando\\\\PycharmProjects\\\\analista_dani\"; @\\(\"app\\\\__init__.py\", \"app\\\\routes\\\\main.py\", \"run.py\"\\) | ForEach-Object { $r = .\\\\.venv\\\\Scripts\\\\python.exe -m py_compile $_ 2>&1; \"$_`: $\\(if\\($r\\){'ERRO: '+$r}else{'OK'}\\)\" })"
+    ]
+  }
+}

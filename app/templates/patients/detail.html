@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block title %}{{ paciente.nome_exibicao }} – DaniApp{% endblock %}
+{% block page_title %}{{ paciente.nome_exibicao }}{% endblock %}
+
+{% block back_button %}
+<a href="{{ url_for('patients.list') }}" class="btn btn-link text-white p-0 me-1">
+  <i class="bi bi-arrow-left fs-5"></i>
+</a>
+{% endblock %}
+
+{% block header_actions %}
+<a href="{{ url_for('patients.edit', id=paciente.id) }}" class="btn btn-light btn-sm">
+  <i class="bi bi-pencil"></i>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="p-3">
+
+  <!-- Tabs -->
+  <ul class="nav nav-pills nav-fill mb-3 bg-light rounded p-1" id="patientTabs">
+    <li class="nav-item">
+      <a class="nav-link active" href="#dados" data-bs-toggle="pill">Dados</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#anamneses" data-bs-toggle="pill">Anamnese</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#notas" data-bs-toggle="pill">Notas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#agenda" data-bs-toggle="pill">Agenda</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- Dados -->
+    <div class="tab-pane fade show active" id="dados">
+      <div class="section-card mb-3">
+        <div class="section-title"><i class="bi bi-person-vcard"></i> Identificação</div>
+        {% macro info(label, value) %}
+          {% if value %}
+          <div class="info-row">
+            <span class="info-label">{{ label }}</span>
+            <span class="info-value">{{ value }}</span>
+          </div>
+          {% endif %}
+        {% endmacro %}
+        {{ info('Nome completo', paciente.nome_completo) }}
+        {{ info('Apelido', paciente.nome) }}
+        {{ info('CPF', paciente.cpf) }}
+        {{ info('RG', paciente.rg) }}
+        {{ info('Data de nasc.', paciente.data_nascimento.strftime('%d/%m/%Y') if paciente.data_nascimento else None) }}
+        {{ info('Gênero', paciente.genero) }}
+        {{ info('Estado civil', paciente.estado_civil) }}
+        {{ info('Escolaridade', paciente.escolaridade) }}
+        {{ info('Profissão', paciente.profissao) }}
+        {{ info('Naturalidade', paciente.naturalidade) }}
+      </div>
+
+      <div class="section-card mb-3">
+        <div class="section-title"><i class="bi bi-telephone"></i> Contato</div>
+        {% if paciente.telefone %}
+        <div class="info-row">
+          <span class="info-label">Telefone</span>
+          <span class="info-value">
+            <a href="tel:{{ paciente.telefone }}">{{ paciente.telefone }}</a>
+            <a href="https://wa.me/{{ paciente.telefone_whatsapp }}" target="_blank" class="ms-2 text-success">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+          </span>
+        </div>
+        {% endif %}
+        {{ info('E-mail', paciente.email) }}
+      </div>
+
+      {% if paciente.endereco %}
+      <div class="section-card mb-3">
+        <div class="section-title"><i class="bi bi-geo-alt"></i> Endereço</div>
+        <p class="mb-0 px-3 py-2 text-muted">
+          {{ paciente.endereco }}{% if paciente.numero %}, {{ paciente.numero }}{% endif %}
+          {% if paciente.complemento %} – {{ paciente.complemento }}{% endif %}<br>
+          {% if paciente.bairro %}{{ paciente.bairro }},{% endif %}
+          {% if paciente.cidade %}{{ paciente.cidade }}{% endif %}
+          {% if paciente.estado %}/{{ paciente.estado }}{% endif %}
+          {% if paciente.cep %} – CEP {{ paciente.cep }}{% endif %}
+        </p>
+      </div>
+      {% endif %}
+
+      <div class="d-flex gap-2 mt-3">
+        <a href="{{ url_for('appointments.new', pid=paciente.id) }}" class="btn btn-primary flex-fill">
+          <i class="bi bi-calendar-plus"></i> Agendar
+        </a>
+        <a href="{{ url_for('anamnesis.new', pid=paciente.id) }}" class="btn btn-outline-primary flex-fill">
+          <i class="bi bi-file-medical"></i> Nova Anamnese
+        </a>
+      </div>
+    </div>
+
+    <!-- Anamneses -->
+    <div class="tab-pane fade" id="anamneses">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="fw-semibold">Fichas de Anamnese</span>
+        <a href="{{ url_for('anamnesis.new', pid=paciente.id) }}" class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg"></i> Nova
+        </a>
+      </div>
+      {% if paciente.anamneses %}
+        {% for a in paciente.anamneses | sort(attribute='created_at', reverse=True) %}
+        <div class="card border-0 shadow-sm mb-2">
+          <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold small">Anamnese #{{ a.id }}</div>
+              <div class="text-muted small">{{ a.created_at.strftime('%d/%m/%Y %H:%M') }}</div>
+            </div>
+            <div class="d-flex gap-1">
+              <a href="{{ url_for('anamnesis.view', id=a.id) }}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="{{ url_for('anamnesis.edit', id=a.id) }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-pencil"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-file-earmark-x fs-1"></i>
+          <p class="mt-2">Nenhuma ficha de anamnese</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Notas -->
+    <div class="tab-pane fade" id="notas">
+      <form method="post" action="{{ url_for('notes.create', pid=paciente.id) }}" class="mb-3">
+        <div class="mb-2">
+          <textarea name="texto" class="form-control" rows="3" placeholder="Escrever nota..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-plus-lg"></i> Adicionar nota
+        </button>
+      </form>
+
+      {% if paciente.notas %}
+        {% for n in paciente.notas %}
+        <div class="card border-0 shadow-sm mb-2">
+          <div class="card-body py-2 px-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="text-muted small mb-1">{{ n.created_at.strftime('%d/%m/%Y %H:%M') }}</div>
+              <form method="post" action="{{ url_for('notes.delete', id=n.id) }}"
+                    onsubmit="return confirm('Remover esta nota?')">
+                <button type="submit" class="btn btn-sm btn-link text-danger p-0">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+            <div class="small" style="white-space: pre-wrap">{{ n.texto }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-journal-x fs-1"></i>
+          <p class="mt-2">Nenhuma nota registrada</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Agenda -->
+    <div class="tab-pane fade" id="agenda">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="fw-semibold">Histórico de Consultas</span>
+        <a href="{{ url_for('appointments.new', pid=paciente.id) }}" class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg"></i> Agendar
+        </a>
+      </div>
+      {% if paciente.agendamentos %}
+        {% for ag in paciente.agendamentos %}
+        <div class="card border-0 shadow-sm mb-2">
+          <div class="card-body py-2 px-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <div class="small fw-semibold">{{ ag.data_hora.strftime('%d/%m/%Y %H:%M') }}</div>
+                <div class="small text-muted">
+                  R$ {{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}
+                  {% if ag.valor_custo %}+ custo R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}{% endif %}
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-1">
+                {% if ag.confirmado %}
+                  <span class="badge bg-success"><i class="bi bi-check-circle"></i> Realizada</span>
+                {% else %}
+                  <span class="badge bg-secondary">Pendente</span>
+                {% endif %}
+                <a href="{{ url_for('appointments.edit', id=ag.id) }}" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-pencil"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-calendar-x fs-1"></i>
+          <p class="mt-2">Nenhuma consulta</p>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Ativar tab baseado no hash da URL
+  const hash = window.location.hash;
+  if (hash) {
+    const tab = document.querySelector(`[href="${hash}"]`);
+    if (tab) bootstrap.Tab.getOrCreateInstance(tab).show();
+  }
+</script>
+{% endblock %}

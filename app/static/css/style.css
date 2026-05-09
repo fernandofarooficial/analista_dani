@@ -1,0 +1,162 @@
+/* ===== Layout base ===== */
+body {
+  background-color: #f0f4f8;
+  padding-top: 56px;   /* fixed navbar height */
+  padding-bottom: 70px; /* fixed bottom-nav height */
+  font-size: 0.95rem;
+}
+
+/* ===== Fixed header navbar ===== */
+.navbar {
+  height: 56px;
+  z-index: 1030;
+}
+
+/* ===== Bottom Navigation ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #ffffff;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  z-index: 1025;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #6c757d;
+  font-size: 0.68rem;
+  padding: 6px 0;
+  transition: color 0.15s;
+  gap: 2px;
+}
+
+.bottom-nav-item i {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.bottom-nav-item.active,
+.bottom-nav-item:hover {
+  color: #0d6efd;
+}
+
+/* ===== Main content ===== */
+.main-content {
+  min-height: calc(100vh - 120px);
+}
+
+/* ===== Section cards ===== */
+.section-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.section-title {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== Info rows (detail view) ===== */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 14px;
+  border-bottom: 1px solid #f1f3f5;
+  gap: 8px;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #6c757d;
+  font-size: 0.82rem;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* ===== Cards ===== */
+.card {
+  border-radius: 10px;
+}
+
+/* ===== Extra small buttons ===== */
+.btn-xs {
+  padding: 2px 7px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+}
+
+/* ===== Forms ===== */
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ===== Badges ===== */
+.badge {
+  font-size: 0.72rem;
+}
+
+/* ===== Alert ===== */
+.alert {
+  border-radius: 8px;
+}
+
+/* ===== Nav pills ===== */
+.nav-pills .nav-link {
+  border-radius: 8px;
+  font-size: 0.82rem;
+  padding: 6px 4px;
+}
+
+/* ===== Safe area for notched phones ===== */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(64px + env(safe-area-inset-bottom));
+  }
+  body {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+}
