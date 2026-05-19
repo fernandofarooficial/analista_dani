@@ -27,7 +27,7 @@
             <div class="fw-semibold text-dark">{{ p.nome_completo }}</div>
             <div class="text-muted small">
               {% if p.data_nascimento %}
-                <i class="bi bi-cake2"></i> {{ p.data_nascimento.strftime('%d/%m/%Y') }}
+                <i class="bi bi-cake2"></i> {{ p.data_nascimento | data_br }}
               {% endif %}
               {% if p.telefone %}
                 <i class="bi bi-telephone ms-2"></i> {{ p.telefone }}

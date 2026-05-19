@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, current_app, make_response
-from datetime import datetime, date
+from app.utils import now_sp, mes_pt
 from sqlalchemy import extract
 from app.extensions import db
 from app.models import Paciente, Agendamento
@@ -24,8 +24,8 @@ def service_worker():
 
 @main_bp.route('/m/')
 def dashboard():
-    hoje = date.today()
-    agora = datetime.utcnow()
+    agora = now_sp()
+    hoje = agora.date()
 
     # Próximos agendamentos (7 dias)
     proximos = (
@@ -72,5 +72,5 @@ def dashboard():
         total_custo=total_custo,
         total_geral=total_consulta + total_custo,
         total_pacientes=total_pacientes,
-        mes_atual=hoje.strftime('%B/%Y'),
+        mes_atual=f"{mes_pt(hoje).capitalize()}/{hoje.year}",
     )

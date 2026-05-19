@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from datetime import datetime
+from app.utils import now_sp
 from app.extensions import db
 from app.models import Agendamento, Paciente, Configuracao
 from app.whatsapp import wa_me_link
@@ -10,7 +11,7 @@ appointments_bp = Blueprint('appointments', __name__, url_prefix='/m/agenda')
 @appointments_bp.route('/')
 def list():
     filtro = request.args.get('filtro', 'proximos')
-    agora = datetime.utcnow()
+    agora = now_sp()
 
     if filtro == 'anteriores':
         agendamentos = (

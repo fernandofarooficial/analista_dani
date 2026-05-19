@@ -1,9 +1,8 @@
 import logging
-from datetime import datetime, timedelta
-import pytz
+from datetime import timedelta
+from app.utils import now_sp
 
 logger = logging.getLogger(__name__)
-TIMEZONE = pytz.timezone('America/Sao_Paulo')
 
 
 def check_birthdays(app):
@@ -12,7 +11,7 @@ def check_birthdays(app):
         from app.models import Paciente
         from app.whatsapp import send_whatsapp, notify_psicanal
 
-        hoje = datetime.now(TIMEZONE).date()
+        hoje = now_sp().date()
         pacientes = Paciente.query.filter(
             Paciente.ativo == True,
             Paciente.data_nascimento != None,
@@ -48,7 +47,7 @@ def check_appointments_24h(app):
         from app.models import Agendamento
         from app.whatsapp import send_whatsapp
 
-        agora = datetime.now(TIMEZONE).replace(tzinfo=None)
+        agora = now_sp()
         em_24h = agora + timedelta(hours=24)
         janela_inicio = em_24h - timedelta(minutes=30)
         janela_fim = em_24h + timedelta(minutes=30)

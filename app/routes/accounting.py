@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
-from datetime import date, datetime
+from datetime import datetime
+from app.utils import now_sp
 from sqlalchemy import extract, func
 from app.extensions import db
 from app.models import Agendamento
@@ -9,7 +10,7 @@ accounting_bp = Blueprint('accounting', __name__, url_prefix='/m/contabil')
 
 @accounting_bp.route('/')
 def report():
-    hoje = date.today()
+    hoje = now_sp().date()
     modo = request.args.get('modo', 'mes')  # 'mes' ou 'periodo'
 
     if modo == 'periodo':

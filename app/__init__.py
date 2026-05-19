@@ -12,6 +12,11 @@ def create_app(config_name='default'):
 
     db.init_app(app)
 
+    from app.utils import fmt_data, fmt_datahora, mes_pt
+    app.jinja_env.filters['data_br'] = fmt_data
+    app.jinja_env.filters['datahora_br'] = fmt_datahora
+    app.jinja_env.filters['mes_pt'] = mes_pt
+
     from app.routes.main import main_bp
     from app.routes.patients import patients_bp
     from app.routes.anamnesis import anamnesis_bp

@@ -51,7 +51,7 @@
         {{ info('Apelido', paciente.nome) }}
         {{ info('CPF', paciente.cpf) }}
         {{ info('RG', paciente.rg) }}
-        {{ info('Data de nasc.', paciente.data_nascimento.strftime('%d/%m/%Y') if paciente.data_nascimento else None) }}
+        {{ info('Data de nasc.', paciente.data_nascimento | data_br) }}
         {{ info('Gênero', paciente.genero) }}
         {{ info('Estado civil', paciente.estado_civil) }}
         {{ info('Escolaridade', paciente.escolaridade) }}
@@ -113,7 +113,7 @@
           <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
             <div>
               <div class="fw-semibold small">Anamnese #{{ a.id }}</div>
-              <div class="text-muted small">{{ a.created_at.strftime('%d/%m/%Y %H:%M') }}</div>
+              <div class="text-muted small">{{ a.created_at | datahora_br }}</div>
             </div>
             <div class="d-flex gap-1">
               <a href="{{ url_for('anamnesis.view', id=a.id) }}" class="btn btn-sm btn-outline-primary">
@@ -150,7 +150,7 @@
         <div class="card border-0 shadow-sm mb-2">
           <div class="card-body py-2 px-3">
             <div class="d-flex justify-content-between align-items-start">
-              <div class="text-muted small mb-1">{{ n.created_at.strftime('%d/%m/%Y %H:%M') }}</div>
+              <div class="text-muted small mb-1">{{ n.created_at | datahora_br }}</div>
               <form method="post" action="{{ url_for('notes.delete', id=n.id) }}"
                     onsubmit="return confirm('Remover esta nota?')">
                 <button type="submit" class="btn btn-sm btn-link text-danger p-0">
@@ -184,7 +184,7 @@
           <div class="card-body py-2 px-3">
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <div class="small fw-semibold">{{ ag.data_hora.strftime('%d/%m/%Y %H:%M') }}</div>
+                <div class="small fw-semibold">{{ ag.data_hora | datahora_br }}</div>
                 <div class="small text-muted">
                   R$ {{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}
                   {% if ag.valor_custo %}+ custo R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}{% endif %}

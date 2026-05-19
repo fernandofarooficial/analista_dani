@@ -77,7 +77,7 @@
             <div class="fw-semibold">{{ ag.paciente.nome_exibicao }}</div>
             <div class="text-muted small">
               <i class="bi bi-calendar3"></i>
-              {{ ag.data_hora.strftime('%d/%m/%Y') }}
+              {{ ag.data_hora | data_br }}
               <i class="bi bi-clock ms-1"></i>
               {{ ag.data_hora.strftime('%H:%M') }}
             </div>

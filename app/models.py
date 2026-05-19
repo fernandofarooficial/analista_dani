@@ -1,4 +1,4 @@
-from datetime import datetime
+from app.utils import now_sp
 from app.extensions import db
 
 
@@ -27,8 +27,8 @@ class Paciente(db.Model):
     naturalidade = db.Column(db.String(100))
     envia_parabens = db.Column(db.Boolean, default=True, nullable=False)
     ativo = db.Column(db.Boolean, default=True, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=now_sp)
+    updated_at = db.Column(db.DateTime, default=now_sp, onupdate=now_sp)
 
     anamneses = db.relationship('Anamnese', backref='paciente', lazy=True, cascade='all, delete-orphan')
     notas = db.relationship('NotaPaciente', backref='paciente', lazy=True, cascade='all, delete-orphan',
@@ -88,8 +88,8 @@ class Anamnese(db.Model):
     contratransferencia = db.Column(db.Text)
     prognostico_plano = db.Column(db.Text)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=now_sp)
+    updated_at = db.Column(db.DateTime, default=now_sp, onupdate=now_sp)
 
     def __repr__(self):
         return f'<Anamnese {self.id} paciente={self.paciente_id}>'
@@ -101,7 +101,7 @@ class NotaPaciente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     paciente_id = db.Column(db.Integer, db.ForeignKey('pacientes.id'), nullable=False)
     texto = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=now_sp)
 
     def __repr__(self):
         return f'<Nota {self.id}>'
@@ -118,8 +118,8 @@ class Agendamento(db.Model):
     confirmado = db.Column(db.Boolean, default=False, nullable=False)
     whatsapp_enviado = db.Column(db.Boolean, default=False, nullable=False)
     observacoes = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=now_sp)
+    updated_at = db.Column(db.DateTime, default=now_sp, onupdate=now_sp)
 
     def __repr__(self):
         return f'<Agendamento {self.id} {self.data_hora}>'
