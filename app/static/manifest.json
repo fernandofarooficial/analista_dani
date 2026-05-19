@@ -5,8 +5,8 @@
   "start_url": "/daniapp/m/",
   "scope": "/daniapp/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#0d6efd",
+  "background_color": "#fdf2f8",
+  "theme_color": "#c9477f",
   "orientation": "portrait",
   "icons": [
     {

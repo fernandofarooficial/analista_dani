@@ -1,8 +1,62 @@
+/* ===== Paleta rosa – override Bootstrap 5 ===== */
+:root {
+  --bs-primary:           #c9477f;
+  --bs-primary-rgb:       201, 71, 127;
+  --bs-link-color:        #c9477f;
+  --bs-link-color-rgb:    201, 71, 127;
+  --bs-link-hover-color:  #a83868;
+}
+
+.btn-primary {
+  --bs-btn-bg:                  #c9477f;
+  --bs-btn-border-color:        #c9477f;
+  --bs-btn-hover-bg:            #b03870;
+  --bs-btn-hover-border-color:  #b03870;
+  --bs-btn-active-bg:           #9c2f62;
+  --bs-btn-active-border-color: #9c2f62;
+  --bs-btn-disabled-bg:         #c9477f;
+  --bs-btn-disabled-border-color: #c9477f;
+  --bs-btn-focus-shadow-rgb:    201, 71, 127;
+}
+
+.btn-outline-primary {
+  --bs-btn-color:               #c9477f;
+  --bs-btn-border-color:        #c9477f;
+  --bs-btn-hover-bg:            #c9477f;
+  --bs-btn-hover-border-color:  #c9477f;
+  --bs-btn-active-bg:           #b03870;
+  --bs-btn-active-border-color: #b03870;
+  --bs-btn-focus-shadow-rgb:    201, 71, 127;
+}
+
+.bg-primary {
+  background-color: #c9477f !important;
+}
+
+.text-primary {
+  color: #c9477f !important;
+}
+
+.border-primary {
+  border-color: #c9477f !important;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #c9477f;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #c9477f;
+  box-shadow: 0 0 0 0.2rem rgba(201, 71, 127, 0.2);
+}
+
 /* ===== Layout base ===== */
 body {
-  background-color: #f0f4f8;
-  padding-top: 56px;   /* fixed navbar height */
-  padding-bottom: 70px; /* fixed bottom-nav height */
+  background-color: #fdf2f8;
+  padding-top: 56px;
+  padding-bottom: 70px;
   font-size: 0.95rem;
 }
 
@@ -20,10 +74,10 @@ body {
   right: 0;
   height: 64px;
   background: #ffffff;
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid #f0d6e8;
   display: flex;
   z-index: 1025;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 -2px 8px rgba(201, 71, 127, 0.08);
 }
 
 .bottom-nav-item {
@@ -33,7 +87,7 @@ body {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #6c757d;
+  color: #9e7d8e;
   font-size: 0.68rem;
   padding: 6px 0;
   transition: color 0.15s;
@@ -47,7 +101,7 @@ body {
 
 .bottom-nav-item.active,
 .bottom-nav-item:hover {
-  color: #0d6efd;
+  color: #c9477f;
 }
 
 /* ===== Main content ===== */
@@ -59,17 +113,17 @@ body {
 .section-card {
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(201, 71, 127, 0.08);
   overflow: hidden;
 }
 
 .section-title {
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  background: #fdf2f8;
+  border-bottom: 1px solid #f5daea;
   padding: 10px 14px;
   font-weight: 600;
   font-size: 0.88rem;
-  color: #495057;
+  color: #7a3a56;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -81,7 +135,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   padding: 8px 14px;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid #fbeaf3;
   gap: 8px;
 }
 
@@ -90,7 +144,7 @@ body {
 }
 
 .info-label {
-  color: #6c757d;
+  color: #9e7d8e;
   font-size: 0.82rem;
   min-width: 110px;
   flex-shrink: 0;
@@ -118,7 +172,7 @@ body {
 .form-label {
   font-size: 0.85rem;
   font-weight: 500;
-  color: #495057;
+  color: #7a3a56;
   margin-bottom: 4px;
 }
 
