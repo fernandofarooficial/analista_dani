@@ -7,7 +7,7 @@ notes_bp = Blueprint('notes', __name__, url_prefix='/m')
 
 @notes_bp.route('/pacientes/<int:pid>/notas', methods=['POST'])
 def create(pid):
-    Paciente.query.get_or_404(pid)
+    db.get_or_404(Paciente, pid)
     texto = request.form.get('texto', '').strip()
     if not texto:
         flash('A nota não pode estar vazia.', 'warning')
@@ -21,7 +21,7 @@ def create(pid):
 
 @notes_bp.route('/notas/<int:id>/excluir', methods=['POST'])
 def delete(id):
-    nota = NotaPaciente.query.get_or_404(id)
+    nota = db.get_or_404(NotaPaciente, id)
     pid = nota.paciente_id
     db.session.delete(nota)
     db.session.commit()

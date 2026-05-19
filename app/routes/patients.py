@@ -35,13 +35,13 @@ def new():
 
 @patients_bp.route('/<int:id>')
 def detail(id):
-    p = Paciente.query.get_or_404(id)
+    p = db.get_or_404(Paciente, id)
     return render_template('patients/detail.html', paciente=p)
 
 
 @patients_bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 def edit(id):
-    p = Paciente.query.get_or_404(id)
+    p = db.get_or_404(Paciente, id)
     if request.method == 'POST':
         _paciente_from_form(p)
         db.session.commit()
@@ -52,7 +52,7 @@ def edit(id):
 
 @patients_bp.route('/<int:id>/excluir', methods=['POST'])
 def delete(id):
-    p = Paciente.query.get_or_404(id)
+    p = db.get_or_404(Paciente, id)
     p.ativo = False
     db.session.commit()
     flash('Paciente inativado.', 'info')

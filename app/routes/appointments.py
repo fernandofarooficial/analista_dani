@@ -47,7 +47,7 @@ def new(pid=None):
         flash('Consulta agendada com sucesso!', 'success')
         return redirect(url_for('appointments.list'))
 
-    paciente_pre = Paciente.query.get(pid) if pid else None
+    paciente_pre = db.session.get(Paciente, pid) if pid else None
     return render_template(
         'appointments/form.html',
         agendamento=None,
@@ -60,7 +60,7 @@ def new(pid=None):
 
 @appointments_bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 def edit(id):
-    ag = Agendamento.query.get_or_404(id)
+    ag = db.get_or_404(Agendamento, id)
     pacientes = Paciente.query.filter_by(ativo=True).order_by(Paciente.nome_completo).all()
 
     if request.method == 'POST':
@@ -76,7 +76,7 @@ def edit(id):
 
 @appointments_bp.route('/<int:id>/confirmar', methods=['POST'])
 def confirm(id):
-    ag = Agendamento.query.get_or_404(id)
+    ag = db.get_or_404(Agendamento, id)
     ag.confirmado = not ag.confirmado
     db.session.commit()
     status = 'confirmada' if ag.confirmado else 'desconfirmada'
@@ -86,7 +86,7 @@ def confirm(id):
 
 @appointments_bp.route('/<int:id>/excluir', methods=['POST'])
 def delete(id):
-    ag = Agendamento.query.get_or_404(id)
+    ag = db.get_or_404(Agendamento, id)
     db.session.delete(ag)
     db.session.commit()
     flash('Agendamento removido.', 'info')
@@ -95,7 +95,7 @@ def delete(id):
 
 @appointments_bp.route('/<int:id>/whatsapp-lembrete')
 def whatsapp_lembrete(id):
-    ag = Agendamento.query.get_or_404(id)
+    ag = db.get_or_404(Agendamento, id)
     p = ag.paciente
     if not p or not p.telefone:
         flash('Paciente sem telefone cadastrado.', 'warning')

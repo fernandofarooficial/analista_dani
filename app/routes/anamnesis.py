@@ -7,7 +7,7 @@ anamnesis_bp = Blueprint('anamnesis', __name__, url_prefix='/m')
 
 @anamnesis_bp.route('/pacientes/<int:pid>/anamnese/nova', methods=['GET', 'POST'])
 def new(pid):
-    paciente = Paciente.query.get_or_404(pid)
+    paciente = db.get_or_404(Paciente, pid)
     if request.method == 'POST':
         a = _anamnese_from_form(Anamnese(paciente_id=pid))
         db.session.add(a)
@@ -19,13 +19,13 @@ def new(pid):
 
 @anamnesis_bp.route('/anamnese/<int:id>')
 def view(id):
-    a = Anamnese.query.get_or_404(id)
+    a = db.get_or_404(Anamnese, id)
     return render_template('anamnesis/view.html', anamnese=a, paciente=a.paciente)
 
 
 @anamnesis_bp.route('/anamnese/<int:id>/editar', methods=['GET', 'POST'])
 def edit(id):
-    a = Anamnese.query.get_or_404(id)
+    a = db.get_or_404(Anamnese, id)
     if request.method == 'POST':
         _anamnese_from_form(a)
         db.session.commit()
@@ -36,7 +36,7 @@ def edit(id):
 
 @anamnesis_bp.route('/anamnese/<int:id>/excluir', methods=['POST'])
 def delete(id):
-    a = Anamnese.query.get_or_404(id)
+    a = db.get_or_404(Anamnese, id)
     pid = a.paciente_id
     db.session.delete(a)
     db.session.commit()
