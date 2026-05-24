@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+from sqlalchemy import extract
 from app.utils import now_sp
 
 logger = logging.getLogger(__name__)
@@ -15,8 +16,8 @@ def check_birthdays(app):
         pacientes = Paciente.query.filter(
             Paciente.ativo == True,
             Paciente.data_nascimento != None,
-            db_extract('month', Paciente.data_nascimento) == hoje.month,
-            db_extract('day', Paciente.data_nascimento) == hoje.day,
+            extract('month', Paciente.data_nascimento) == hoje.month,
+            extract('day', Paciente.data_nascimento) == hoje.day,
         ).all()
 
         for p in pacientes:
@@ -77,6 +78,3 @@ def check_appointments_24h(app):
                 logger.info('Lembrete enviado para %s (agendamento %d)', p.nome_completo, ag.id)
 
 
-def db_extract(field, column):
-    from sqlalchemy import extract
-    return extract(field, column)

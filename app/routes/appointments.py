@@ -7,30 +7,32 @@ from app.whatsapp import wa_me_link
 
 appointments_bp = Blueprint('appointments', __name__, url_prefix='/m/agenda')
 
+_PER_PAGE = 20
+
 
 @appointments_bp.route('/')
 def list():
     filtro = request.args.get('filtro', 'proximos')
+    page = request.args.get('page', 1, type=int)
     agora = now_sp()
 
     if filtro == 'anteriores':
-        agendamentos = (
+        query = (
             Agendamento.query
             .filter(Agendamento.data_hora < agora)
             .order_by(Agendamento.data_hora.desc())
-            .limit(50).all()
         )
     elif filtro == 'todos':
-        agendamentos = Agendamento.query.order_by(Agendamento.data_hora.desc()).limit(100).all()
+        query = Agendamento.query.order_by(Agendamento.data_hora.desc())
     else:
-        agendamentos = (
+        query = (
             Agendamento.query
             .filter(Agendamento.data_hora >= agora)
             .order_by(Agendamento.data_hora)
-            .limit(50).all()
         )
 
-    return render_template('appointments/list.html', agendamentos=agendamentos, filtro=filtro)
+    paginacao = query.paginate(page=page, per_page=_PER_PAGE, error_out=False)
+    return render_template('appointments/list.html', agendamentos=paginacao.items, paginacao=paginacao, filtro=filtro)
 
 
 @appointments_bp.route('/novo', methods=['GET', 'POST'])
@@ -103,8 +105,8 @@ def whatsapp_lembrete(id):
     data_str = ag.data_hora.strftime('%d/%m/%Y às %H:%M')
     msg = (
         f'Olá, {p.nome_exibicao}! 😊\n'
-        f'Lembrete da sua consulta em *{data_str}*.\n'
-        f'Qualquer dúvida, entre em contato. Até lá! 🌸'
+        f'Passando para confirmar seu horário em *{data_str}*.\n'
+        f'Até lá! Cuide-se bem! 🌸'
     )
     link = wa_me_link(p.telefone, msg)
     return redirect(link)

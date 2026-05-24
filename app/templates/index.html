@@ -13,14 +13,22 @@
 
   <!-- Aniversariantes -->
   {% if aniversariantes %}
-  <div class="alert alert-warning d-flex align-items-center gap-2 py-2 mb-3">
-    <i class="bi bi-balloon-heart-fill fs-4"></i>
-    <div>
+  <div class="alert alert-warning py-2 mb-3">
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <i class="bi bi-balloon-heart-fill fs-4"></i>
       <strong>Aniversariante(s) hoje:</strong>
-      {% for p in aniversariantes %}
-        <a href="{{ url_for('patients.detail', id=p.id) }}" class="text-dark">{{ p.nome_exibicao }}</a>{% if not loop.last %}, {% endif %}
-      {% endfor %}
     </div>
+    {% for p in aniversariantes %}
+    <div class="d-flex justify-content-between align-items-center {% if not loop.last %}mb-1{% endif %}">
+      <a href="{{ url_for('patients.detail', id=p.id) }}" class="text-dark">{{ p.nome_exibicao }}</a>
+      {% if p.telefone %}
+      <a href="{{ url_for('patients.whatsapp_parabens', id=p.id) }}" target="_blank"
+         class="btn btn-sm btn-success py-0 px-2">
+        <i class="bi bi-whatsapp"></i> Parabéns
+      </a>
+      {% endif %}
+    </div>
+    {% endfor %}
   </div>
   {% endif %}
 
