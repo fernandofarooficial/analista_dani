@@ -51,7 +51,7 @@ def report():
         agendamentos=agendamentos,
         total_consulta=total_consulta,
         total_custo=total_custo,
-        total_geral=total_consulta + total_custo,
+        total_liquido=total_consulta - total_custo,
         inicio=inicio,
         fim=fim,
         modo=modo,

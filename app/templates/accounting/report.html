@@ -76,17 +76,17 @@
     <div class="section-title"><i class="bi bi-calculator"></i> Resumo</div>
     <div class="p-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <span>Total Consultas</span>
+        <span>Receita Bruta</span>
         <span class="fw-bold text-primary">R$ {{ '%.2f'|format(total_consulta)|replace('.', ',') }}</span>
       </div>
       <div class="d-flex justify-content-between align-items-center mb-2">
         <span>Total Custos</span>
-        <span class="fw-bold text-danger">R$ {{ '%.2f'|format(total_custo)|replace('.', ',') }}</span>
+        <span class="fw-bold text-danger">− R$ {{ '%.2f'|format(total_custo)|replace('.', ',') }}</span>
       </div>
       <hr class="my-2">
       <div class="d-flex justify-content-between align-items-center">
-        <span class="fw-bold">Total Geral</span>
-        <span class="fw-bold fs-5 text-success">R$ {{ '%.2f'|format(total_geral)|replace('.', ',') }}</span>
+        <span class="fw-bold">Líquido</span>
+        <span class="fw-bold fs-5 text-success">R$ {{ '%.2f'|format(total_liquido)|replace('.', ',') }}</span>
       </div>
       <div class="text-muted small mt-2">
         {{ agendamentos|length }} sessão(ões) confirmada(s) no período
@@ -113,7 +113,7 @@
           </div>
           {% if ag.valor_custo %}
           <div class="text-danger small">
-            + R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}
+            custo: R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}
           </div>
           {% endif %}
         </div>

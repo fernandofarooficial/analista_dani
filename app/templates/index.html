@@ -53,8 +53,8 @@
     <div class="col-6">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body text-center py-3">
-          <div class="text-muted small">Total ({{ mes_atual }})</div>
-          <div class="fw-bold fs-5 text-success">R$ <span class="valor-oculto">{{ '%.2f'|format(total_geral)|replace('.', ',') }}</span></div>
+          <div class="text-muted small">Líquido ({{ mes_atual }})</div>
+          <div class="fw-bold fs-5 text-success">R$ <span class="valor-oculto">{{ '%.2f'|format(total_liquido)|replace('.', ',') }}</span></div>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@
             <div class="small">
               <span class="text-primary">R$ <span class="valor-oculto">{{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}</span></span>
               {% if ag.valor_custo %}
-                <span class="text-muted ms-1">+ custo R$ <span class="valor-oculto">{{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}</span></span>
+                <span class="text-muted ms-1">(custo: R$ <span class="valor-oculto">{{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}</span>)</span>
               {% endif %}
             </div>
           </div>

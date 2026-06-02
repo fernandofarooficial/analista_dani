@@ -45,7 +45,7 @@
             <div class="small">
               <span class="text-primary">R$ {{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}</span>
               {% if ag.valor_custo %}
-                <span class="text-muted">+ custo R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}</span>
+                <span class="text-muted">(custo: R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }})</span>
               {% endif %}
             </div>
             {% if ag.observacoes %}

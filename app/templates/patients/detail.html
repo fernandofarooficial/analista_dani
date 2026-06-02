@@ -187,7 +187,7 @@
                 <div class="small fw-semibold">{{ ag.data_hora | datahora_br }}</div>
                 <div class="small text-muted">
                   R$ {{ '%.2f'|format(ag.valor_consulta or 0)|replace('.', ',') }}
-                  {% if ag.valor_custo %}+ custo R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}{% endif %}
+                  {% if ag.valor_custo %}(custo: R$ {{ '%.2f'|format(ag.valor_custo or 0)|replace('.', ',') }}){% endif %}
                 </div>
               </div>
               <div class="d-flex align-items-center gap-1">

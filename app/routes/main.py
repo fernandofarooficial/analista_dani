@@ -70,7 +70,7 @@ def dashboard():
         aniversariantes=aniversariantes,
         total_consulta=total_consulta,
         total_custo=total_custo,
-        total_geral=total_consulta + total_custo,
+        total_liquido=total_consulta - total_custo,
         total_pacientes=total_pacientes,
         mes_atual=f"{mes_pt(hoje).capitalize()}/{hoje.year}",
     )
