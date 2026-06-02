@@ -1,6 +1,6 @@
 import logging
 from datetime import timedelta
-from sqlalchemy import extract
+from sqlalchemy import extract, update
 from app.utils import now_sp
 
 logger = logging.getLogger(__name__)
@@ -60,10 +60,25 @@ def check_appointments_24h(app):
             Agendamento.confirmado == False,
         ).all()
 
+        from app.extensions import db
+
         for ag in agendamentos:
             p = ag.paciente
             if not p or not p.telefone:
                 continue
+
+            # Marca atomicamente antes de enviar para evitar duplicatas quando múltiplos
+            # workers (gunicorn) ou processos (Flask reloader) executam o job ao mesmo tempo.
+            # Se rowcount == 0, outro processo já reivindicou este agendamento.
+            result = db.session.execute(
+                update(Agendamento)
+                .where(Agendamento.id == ag.id, Agendamento.whatsapp_enviado == False)
+                .values(whatsapp_enviado=True)
+            )
+            db.session.commit()
+            if result.rowcount == 0:
+                continue
+
             data_str = ag.data_hora.strftime('%d/%m/%Y às %H:%M')
             msg = (
                 f'Olá, {p.nome_exibicao}! 😊\n'
@@ -72,9 +87,15 @@ def check_appointments_24h(app):
             )
             enviado = send_whatsapp(p.telefone, msg, app=None)
             if enviado:
-                ag.whatsapp_enviado = True
-                from app.extensions import db
-                db.session.commit()
                 logger.info('Lembrete enviado para %s (agendamento %d)', p.nome_completo, ag.id)
+            else:
+                # Reverte flag para tentar novamente na próxima execução
+                db.session.execute(
+                    update(Agendamento)
+                    .where(Agendamento.id == ag.id)
+                    .values(whatsapp_enviado=False)
+                )
+                db.session.commit()
+                logger.warning('Falha ao enviar lembrete para %s (agendamento %d)', p.nome_completo, ag.id)
 
 
