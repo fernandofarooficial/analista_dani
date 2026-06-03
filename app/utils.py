@@ -31,3 +31,20 @@ def fmt_datahora(dt) -> str:
     if dt is None:
         return ''
     return dt.strftime('%d/%m/%Y %H:%M')
+
+
+def fmt_telefone(valor) -> str:
+    """Formata número de telefone como (99) 9 9999-9999 (celular) ou (99) 9999-9999 (fixo)."""
+    if not valor:
+        return ''
+    digits = ''.join(c for c in str(valor) if c.isdigit())
+    # Remove código do país 55 se presente
+    if len(digits) == 13 and digits.startswith('55'):
+        digits = digits[2:]
+    elif len(digits) == 12 and digits.startswith('55'):
+        digits = digits[2:]
+    if len(digits) == 11:
+        return f'({digits[:2]}) {digits[2]} {digits[3:7]}-{digits[7:]}'
+    if len(digits) == 10:
+        return f'({digits[:2]}) {digits[2:6]}-{digits[6:]}'
+    return valor

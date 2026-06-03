@@ -65,7 +65,7 @@
         <div class="info-row">
           <span class="info-label">Telefone</span>
           <span class="info-value">
-            <a href="tel:{{ paciente.telefone }}">{{ paciente.telefone }}</a>
+            <a href="tel:{{ paciente.telefone }}">{{ paciente.telefone | telefone_br }}</a>
             <a href="https://wa.me/{{ paciente.telefone_whatsapp }}" target="_blank" class="ms-2 text-success">
               <i class="bi bi-whatsapp"></i>
             </a>

@@ -37,7 +37,7 @@
     <div class="section-title"><i class="bi bi-person-lines-fill"></i> 1. Dados Cadastrais</div>
     <div class="info-row"><span class="info-label">Nome</span><span class="info-value">{{ paciente.nome_completo }}</span></div>
     {% if paciente.email %}<div class="info-row"><span class="info-label">E-mail</span><span class="info-value">{{ paciente.email }}</span></div>{% endif %}
-    {% if paciente.telefone %}<div class="info-row"><span class="info-label">Telefone</span><span class="info-value">{{ paciente.telefone }}</span></div>{% endif %}
+    {% if paciente.telefone %}<div class="info-row"><span class="info-label">Telefone</span><span class="info-value">{{ paciente.telefone | telefone_br }}</span></div>{% endif %}
     {% if paciente.data_nascimento %}<div class="info-row"><span class="info-label">Nascimento</span><span class="info-value">{{ paciente.data_nascimento | data_br }}</span></div>{% endif %}
     {% if paciente.cidade %}<div class="info-row"><span class="info-label">Cidade</span><span class="info-value">{{ paciente.cidade }}</span></div>{% endif %}
     {% if paciente.naturalidade %}<div class="info-row"><span class="info-label">Naturalidade</span><span class="info-value">{{ paciente.naturalidade }}</span></div>{% endif %}
